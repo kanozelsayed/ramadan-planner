@@ -1,6 +1,6 @@
 import { Card, GText, STitle } from "../components/UI";
 import toast from 'react-hot-toast';
-import { useUser } from "../context/Context/UserContext"; // تأكدي من صحة المسار عندك
+import { useUser } from "../context/UserContext"; 
 
 export default function QuranPage({ juz, setJuz, dark }) {
   const { user } = useUser();

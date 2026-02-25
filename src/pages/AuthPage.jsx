@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, GText, Btn, STitle } from "../components/UI";
-import { useUser } from "../context/Context/UserContext";
+import { useUser } from "../context/UserContext";
 import toast from 'react-hot-toast';
 
 export default function AuthPage() {
