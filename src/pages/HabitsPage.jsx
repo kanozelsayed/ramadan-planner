@@ -7,9 +7,10 @@ export default function HabitsPage({ habits, setHabits, dark }) {
   const [newHabit, setNewHabit] = useState("");
 
   const t = {
-    title: user.language === 'ar' ? "🔥 تتبع العادات" : "🔥 HABITS TRACKER",
-    placeholder: user.language === 'ar' ? "إضافة عادة جديدة..." : "Add new habit...",
-    add: user.language === 'ar' ? "إضافة" : "Add"
+    title: user.language === "ar" ? "🔥 تتبع العادات" : "🔥 HABITS TRACKER",
+    placeholder:
+      user.language === "ar" ? "إضافة عادة جديدة..." : "Add new habit...",
+    add: user.language === "ar" ? "إضافة" : "Add",
   };
 
   const addHabit = () => {
@@ -18,7 +19,7 @@ export default function HabitsPage({ habits, setHabits, dark }) {
         id: String(Date.now()),
         name: newHabit,
         icon: "✨",
-        done: false
+        done: false,
       };
       setHabits((prev) => [...prev, habitObj]);
       setNewHabit("");
@@ -29,8 +30,8 @@ export default function HabitsPage({ habits, setHabits, dark }) {
     e.stopPropagation();
     setHabits((prevHabits) =>
       prevHabits.map((h) =>
-        String(h.id) === String(id) ? { ...h, done: !h.done } : h
-      )
+        String(h.id) === String(id) ? { ...h, done: !h.done } : h,
+      ),
     );
   };
 
@@ -40,65 +41,88 @@ export default function HabitsPage({ habits, setHabits, dark }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20, animation: "fadeUp 0.5s ease" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 20,
+        animation: "fadeUp 0.5s ease",
+      }}
+    >
       <GText size={24}>{t.title}</GText>
-      
-      <Card dark={dark} style={{ display: "flex", gap: 10, padding: "15px", border: "1px dashed #c9a227" }}>
-        <input 
+
+      <Card
+        dark={dark}
+        style={{
+          display: "flex",
+          gap: 10,
+          padding: "15px",
+          border: "1px dashed #c9a227",
+        }}
+      >
+        <input
           value={newHabit}
           onChange={(e) => setNewHabit(e.target.value)}
           placeholder={t.placeholder}
-          style={{ 
-            flex: 1, 
-            background: "transparent", 
-            border: "none", 
-            color: "inherit", 
-            outline: "none", 
+          style={{
+            flex: 1,
+            background: "transparent",
+            border: "none",
+            color: "inherit",
+            outline: "none",
             fontSize: "16px",
-            textAlign: user.language === 'ar' ? 'right' : 'left'
+            textAlign: user.language === "ar" ? "right" : "left",
           }}
-          onKeyPress={(e) => e.key === 'Enter' && addHabit()}
+          onKeyPress={(e) => e.key === "Enter" && addHabit()}
         />
-        <Btn small onClick={addHabit}>{t.add}</Btn>
+        <Btn small onClick={addHabit}>
+          {t.add}
+        </Btn>
       </Card>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {habits.map((h) => (
-          <Card 
-            key={String(h.id)} 
-            dark={dark} 
-            style={{ 
-              display: "flex", 
-              alignItems: "center", 
+          <Card
+            key={String(h.id)}
+            dark={dark}
+            style={{
+              display: "flex",
+              alignItems: "center",
               justifyContent: "space-between",
-              border: h.done ? "1px solid #c9a227" : "1px solid rgba(255,255,255,0.05)",
+              border: h.done
+                ? "1px solid #c9a227"
+                : "1px solid rgba(255,255,255,0.05)",
               background: h.done ? "rgba(201,162,39,0.08)" : "transparent",
               transition: "0.3s",
-              padding: "12px 15px"
+              padding: "12px 15px",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
-              <span style={{ fontSize: 22, opacity: h.done ? 1 : 0.5 }}>{h.icon}</span>
-              <span style={{ 
-                textDecoration: h.done ? "line-through" : "none", 
-                opacity: h.done ? 0.5 : 1,
-                fontSize: "16px",
-                fontWeight: "500"
-              }}>
+              <span style={{ fontSize: 22, opacity: h.done ? 1 : 0.5 }}>
+                {h.icon}
+              </span>
+              <span
+                style={{
+                  textDecoration: h.done ? "line-through" : "none",
+                  opacity: h.done ? 0.5 : 1,
+                  fontSize: "16px",
+                  fontWeight: "500",
+                }}
+              >
                 {h.name}
               </span>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-              <button 
+              <button
                 onClick={(e) => deleteHabit(e, h.id)}
-                style={{ 
-                  background: "transparent", 
-                  border: "none", 
-                  cursor: "pointer", 
-                  fontSize: "18px", 
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "18px",
                   opacity: 0.4,
-                  padding: "5px"
+                  padding: "5px",
                 }}
               >
                 🗑️
@@ -107,10 +131,10 @@ export default function HabitsPage({ habits, setHabits, dark }) {
               {/* الدائرة - اتحولت لـ button عشان تشتغل */}
               <button
                 onClick={(e) => toggleHabit(e, h.id)}
-                style={{ 
-                  width: "24px", 
-                  height: "24px", 
-                  borderRadius: "50%", 
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "50%",
                   border: "2px solid #c9a227",
                   display: "flex",
                   alignItems: "center",
@@ -121,7 +145,7 @@ export default function HabitsPage({ habits, setHabits, dark }) {
                   fontWeight: "bold",
                   flexShrink: 0,
                   cursor: "pointer",
-                  padding: 0
+                  padding: 0,
                 }}
               >
                 {h.done && "✓"}
