@@ -1,14 +1,13 @@
 import { Card, GText, STitle } from "../components/UI";
 import toast from 'react-hot-toast';
-import { useUser } from "../context/UserContext"; // استيراد الـ Context
+import { useUser } from "../context/Context/UserContext"; // تأكدي من صحة المسار عندك
 
 export default function QuranPage({ juz, setJuz, dark }) {
-  const { user } = useUser(); // الحصول على لغة المستخدم
+  const { user } = useUser();
 
   const toggleJuz = (index) => {
     const isArabic = user.language === 'ar';
 
-    // 1. لو بنحاول نعلم على جزء إنه "خلص"
     if (!juz[index]) {
       if (index > 0 && !juz[index - 1]) {
         toast.error(
@@ -30,7 +29,6 @@ export default function QuranPage({ juz, setJuz, dark }) {
         { duration: 4000 }
       );
     } 
-    // 2. لو بنحاول نلغي علامة "الخلص"
     else {
       if (index < juz.length - 1 && juz[index + 1]) {
         toast.error(
@@ -55,27 +53,47 @@ export default function QuranPage({ juz, setJuz, dark }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20, animation: "fadeUp 0.5s ease" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <STitle>
+    <div style={{ 
+      display: "flex", 
+      flexDirection: "column", 
+      gap: 20, 
+      animation: "fadeUp 0.5s ease",
+      width: "100%",
+      maxWidth: "800px",
+      margin: "0 auto",
+      padding: "10px",
+      boxSizing: "border-box",
+      direction: user.language === 'ar' ? 'rtl' : 'ltr'
+    }}>
+      
+      {/* العنوان والعداد */}
+      <div style={{ 
+        display: "flex", 
+        justifyContent: "space-between", 
+        alignItems: "center",
+        padding: "0 5px" 
+      }}>
+        <STitle style={{ fontSize: window.innerWidth < 480 ? "18px" : "22px" }}>
           {user.language === 'ar' ? "📖 ختم القرآن الكريم" : "📖 Quran Completion"}
         </STitle>
-        <GText color="#c9a227" bold>
+        <GText color="#c9a227" bold size={window.innerWidth < 480 ? 16 : 20}>
           {juz.filter(Boolean).length} / 30
         </GText>
       </div>
       
+      {/* شبكة الأجزاء المتجاوبة */}
       <div style={{ 
         display: "grid", 
-        gridTemplateColumns: "repeat(auto-fill, minmax(85px, 1fr))", 
-        gap: "12px"
+        // المربعات هتصغر وتكبر تلقائياً وأقل عرض للمربع 75px عشان يشيل 4 في الصف في الموبايلات العادية
+        gridTemplateColumns: "repeat(auto-fill, minmax(75px, 1fr))", 
+        gap: window.innerWidth < 480 ? "8px" : "12px"
       }}>
         {juz.map((done, i) => (
           <div 
             key={i} 
             onClick={() => toggleJuz(i)}
             style={{
-              height: "90px",
+              height: window.innerWidth < 480 ? "75px" : "90px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -86,13 +104,18 @@ export default function QuranPage({ juz, setJuz, dark }) {
               border: done ? "2px solid #c9a227" : "1px solid rgba(255,255,255,0.1)",
               background: done ? "rgba(201,162,39,0.2)" : "rgba(255,255,255,0.03)",
               color: done ? "#c9a227" : "rgba(255,255,255,0.5)",
-              transform: done ? "scale(1.02)" : "scale(1)"
+              transform: done ? "scale(1.05)" : "scale(1)",
+              boxSizing: "border-box",
+              // إضافة ظل خفيف للأجزاء المخلصة
+              boxShadow: done ? "0 4px 15px rgba(201,162,39,0.15)" : "none"
             }}
           >
-            <span style={{ fontSize: "11px", marginBottom: "4px" }}>
+            <span style={{ fontSize: "10px", marginBottom: "2px", opacity: 0.8 }}>
               {user.language === 'ar' ? "جزء" : "JUZ"}
             </span>
-            <span style={{ fontSize: "20px", fontWeight: "bold" }}>{i + 1}</span>
+            <span style={{ fontSize: window.innerWidth < 480 ? "18px" : "22px", fontWeight: "bold" }}>
+              {i + 1}
+            </span>
           </div>
         ))}
       </div>

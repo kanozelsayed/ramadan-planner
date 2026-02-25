@@ -47,17 +47,25 @@ export default function HabitsPage({ habits, setHabits, dark }) {
         flexDirection: "column",
         gap: 20,
         animation: "fadeUp 0.5s ease",
+        width: "100%",
+        maxWidth: "600px", // يمنع تمدد الصفحة بشكل مبالغ فيه في اللابتوب
+        margin: "0 auto", // يوسطن المحتوى
+        padding: "10px", // مسافة أمان للموبايل
+        boxSizing: "border-box"
       }}
     >
-      <GText size={24}>{t.title}</GText>
+      <GText size={24} style={{ textAlign: "center" }}>{t.title}</GText>
 
+      {/* خانة الإضافة - متجاوبة */}
       <Card
         dark={dark}
         style={{
           display: "flex",
+          flexDirection: user.language === "ar" ? "row-reverse" : "row",
           gap: 10,
-          padding: "15px",
+          padding: "12px",
           border: "1px dashed #c9a227",
+          alignItems: "center"
         }}
       >
         <input
@@ -72,14 +80,16 @@ export default function HabitsPage({ habits, setHabits, dark }) {
             outline: "none",
             fontSize: "16px",
             textAlign: user.language === "ar" ? "right" : "left",
+            minWidth: "0" // يمنع كسر الـ layout في الشاشات الصغيرة جداً
           }}
           onKeyPress={(e) => e.key === "Enter" && addHabit()}
         />
-        <Btn small onClick={addHabit}>
+        <Btn small onClick={addHabit} style={{ flexShrink: 0 }}>
           {t.add}
         </Btn>
       </Card>
 
+      {/* قائمة العادات */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {habits.map((h) => (
           <Card
@@ -87,6 +97,7 @@ export default function HabitsPage({ habits, setHabits, dark }) {
             dark={dark}
             style={{
               display: "flex",
+              flexDirection: user.language === "ar" ? "row-reverse" : "row",
               alignItems: "center",
               justifyContent: "space-between",
               border: h.done
@@ -95,25 +106,44 @@ export default function HabitsPage({ habits, setHabits, dark }) {
               background: h.done ? "rgba(201,162,39,0.08)" : "transparent",
               transition: "0.3s",
               padding: "12px 15px",
+              gap: 10
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
-              <span style={{ fontSize: 22, opacity: h.done ? 1 : 0.5 }}>
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: 12, 
+              flexDirection: user.language === "ar" ? "row-reverse" : "row",
+              flex: 1,
+              overflow: "hidden" // لمنع النصوص الطويلة من تخريب الشكل
+            }}>
+              <span style={{ fontSize: 20, opacity: h.done ? 1 : 0.5, flexShrink: 0 }}>
                 {h.icon}
               </span>
               <span
                 style={{
                   textDecoration: h.done ? "line-through" : "none",
                   opacity: h.done ? 0.5 : 1,
-                  fontSize: "16px",
+                  fontSize: "15px",
                   fontWeight: "500",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis", // لو الاسم طويل جداً هيظهر ...
+                  textAlign: user.language === "ar" ? "right" : "left",
+                  width: "100%"
                 }}
               >
                 {h.name}
               </span>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+            <div style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "12px",
+              flexDirection: user.language === "ar" ? "row-reverse" : "row"
+            }}>
+              {/* زر المسح */}
               <button
                 onClick={(e) => deleteHabit(e, h.id)}
                 style={{
@@ -122,18 +152,21 @@ export default function HabitsPage({ habits, setHabits, dark }) {
                   cursor: "pointer",
                   fontSize: "18px",
                   opacity: 0.4,
-                  padding: "5px",
+                  padding: "8px", // تكبير مساحة اللمس
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
                 }}
               >
                 🗑️
               </button>
 
-              {/* الدائرة - اتحولت لـ button عشان تشتغل */}
+              {/* الدائرة التفاعلية */}
               <button
                 onClick={(e) => toggleHabit(e, h.id)}
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "26px",
+                  height: "26px",
                   borderRadius: "50%",
                   border: "2px solid #c9a227",
                   display: "flex",
@@ -141,11 +174,12 @@ export default function HabitsPage({ habits, setHabits, dark }) {
                   justifyContent: "center",
                   background: h.done ? "#c9a227" : "transparent",
                   transition: "all 0.2s",
-                  color: "#000",
+                  color: h.done ? "#fff" : "transparent",
                   fontWeight: "bold",
                   flexShrink: 0,
                   cursor: "pointer",
                   padding: 0,
+                  outline: "none"
                 }}
               >
                 {h.done && "✓"}
