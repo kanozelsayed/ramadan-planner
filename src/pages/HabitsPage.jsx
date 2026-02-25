@@ -12,48 +12,49 @@ export default function HabitsPage({ habits, setHabits, dark }) {
     add: user.language === 'ar' ? "إضافة" : "Add"
   };
 
-  // 1. إضافة عادة جديدة
   const addHabit = () => {
     if (newHabit.trim()) {
       const habitObj = {
-        id: Date.now().toString(),
+        id: String(Date.now()),
         name: newHabit,
         icon: "✨",
         done: false
       };
-      setHabits([...habits, habitObj]);
+      setHabits((prev) => [...prev, habitObj]);
       setNewHabit("");
     }
   };
 
-  // 2. تغيير حالة العادة (علامة الصح والدائرة)
-  const toggleHabit = (id) => {
-    const updated = habits.map(h => 
-      h.id === id ? { ...h, done: !h.done } : h
+  const toggleHabit = (e, id) => {
+    e.stopPropagation();
+    setHabits((prevHabits) =>
+      prevHabits.map((h) =>
+        String(h.id) === String(id) ? { ...h, done: !h.done } : h
+      )
     );
-    setHabits(updated);
   };
 
-  // 3. حذف عادة
   const deleteHabit = (e, id) => {
-    e.stopPropagation(); // عشان ميعملش Done وأنا بمسح
-    const filtered = habits.filter(h => h.id !== id);
-    setHabits(filtered);
+    e.stopPropagation();
+    setHabits((prev) => prev.filter((h) => String(h.id) !== String(id)));
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, animation: "fadeUp 0.5s ease" }}>
       <GText size={24}>{t.title}</GText>
       
-      {/* خانة الإضافة */}
       <Card dark={dark} style={{ display: "flex", gap: 10, padding: "15px", border: "1px dashed #c9a227" }}>
         <input 
           value={newHabit}
           onChange={(e) => setNewHabit(e.target.value)}
           placeholder={t.placeholder}
           style={{ 
-            flex: 1, background: "transparent", border: "none", 
-            color: "inherit", outline: "none", fontSize: "16px",
+            flex: 1, 
+            background: "transparent", 
+            border: "none", 
+            color: "inherit", 
+            outline: "none", 
+            fontSize: "16px",
             textAlign: user.language === 'ar' ? 'right' : 'left'
           }}
           onKeyPress={(e) => e.key === 'Enter' && addHabit()}
@@ -61,27 +62,23 @@ export default function HabitsPage({ habits, setHabits, dark }) {
         <Btn small onClick={addHabit}>{t.add}</Btn>
       </Card>
 
-      {/* قائمة العادات */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {habits.map(h => (
+        {habits.map((h) => (
           <Card 
-            key={h.id} 
+            key={String(h.id)} 
             dark={dark} 
-            onClick={() => toggleHabit(h.id)}
             style={{ 
               display: "flex", 
               alignItems: "center", 
               justifyContent: "space-between",
-              cursor: "pointer",
               border: h.done ? "1px solid #c9a227" : "1px solid rgba(255,255,255,0.05)",
               background: h.done ? "rgba(201,162,39,0.08)" : "transparent",
-              transition: "0.3s"
+              transition: "0.3s",
+              padding: "12px 15px"
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
-              {/* أيقونة العادة */}
               <span style={{ fontSize: 22, opacity: h.done ? 1 : 0.5 }}>{h.icon}</span>
-              {/* اسم العادة */}
               <span style={{ 
                 textDecoration: h.done ? "line-through" : "none", 
                 opacity: h.done ? 0.5 : 1,
@@ -93,16 +90,23 @@ export default function HabitsPage({ habits, setHabits, dark }) {
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-              {/* زرار المسح */}
               <button 
                 onClick={(e) => deleteHabit(e, h.id)}
-                style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: "18px", opacity: 0.4 }}
+                style={{ 
+                  background: "transparent", 
+                  border: "none", 
+                  cursor: "pointer", 
+                  fontSize: "18px", 
+                  opacity: 0.4,
+                  padding: "5px"
+                }}
               >
                 🗑️
               </button>
 
-              {/* الدائرة التفاعلية */}
-              <div 
+              {/* الدائرة - اتحولت لـ button عشان تشتغل */}
+              <button
+                onClick={(e) => toggleHabit(e, h.id)}
                 style={{ 
                   width: "24px", 
                   height: "24px", 
@@ -114,11 +118,14 @@ export default function HabitsPage({ habits, setHabits, dark }) {
                   background: h.done ? "#c9a227" : "transparent",
                   transition: "all 0.2s",
                   color: "#000",
-                  fontWeight: "bold"
+                  fontWeight: "bold",
+                  flexShrink: 0,
+                  cursor: "pointer",
+                  padding: 0
                 }}
               >
                 {h.done && "✓"}
-              </div>
+              </button>
             </div>
           </Card>
         ))}

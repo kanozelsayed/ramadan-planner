@@ -18,7 +18,7 @@ export default function RamadanPlanner() {
   const [tab, setTab] = useState("dashboard");
   const [dark, setDark] = useState(true);
   
-  // ✨ الحالة الجديدة لطي القائمة
+  // ✨ 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
